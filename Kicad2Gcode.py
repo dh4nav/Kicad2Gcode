@@ -5,7 +5,7 @@ import argparse
 import os, sys
 
 class ExcellonLexer(sly.Lexer):
-    tokens = {LETTER, INTEGER, FLOAT, REWIND}
+    tokens = {LETTER, INTEGER, FLOAT, REWIND, XCOORD, YCOORD}
 
     ignore = ' \t\n\r'
 
@@ -15,7 +15,21 @@ class ExcellonLexer(sly.Lexer):
     INTEGER =   r'\d+'
     REWIND  =   r'%'
 
+    LETTER['X'] = XCOORD
+    LETTER['Y'] = YCOORD
+    LETTER['x'] = XCOORD
+    LETTER['y'] = YCOORD
 
+    #Token action triggers
+    @_(r'\d+')
+    def INTEGER(self, t):
+        t.value = int(t.value)
+        return t
+
+    @_(r'\d*\.\d+')
+    def FLOAT(self, t):
+        t.value = float(t.value)
+        return t
 
 argparser = argparse.ArgumentParser()
 
